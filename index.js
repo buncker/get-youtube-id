@@ -8,7 +8,7 @@
     root.getYouTubeID = factory();
   }
 }(this, function (exports) {
-
+  var result = false;
   return function (url, opts) {
     if (opts == undefined) {
       opts = {fuzzy: true};
@@ -19,17 +19,17 @@
       // Look first for known patterns
       var i;
       var patterns = [
-        /youtu\.be\/([^#\&\?]{11})/,  // youtu.be/<id>
-        /\?v=([^#\&\?]{11})/,         // ?v=<id>
-        /\&v=([^#\&\?]{11})/,         // &v=<id>
-        /embed\/([^#\&\?]{11})/,      // embed/<id>
-        /\/v\/([^#\&\?]{11})/         // /v/<id>
+        /youtu\.be\/([^#\&\?]{11,})/,  // youtu.be/<id>
+        /\?v=([^#\&\?]{11,})/,         // ?v=<id>
+        /\&v=([^#\&\?]{11,})/,         // &v=<id>
+        /embed\/([^#\&\?]{11,})/,      // embed/<id>
+        /\/v\/([^#\&\?]{11,})/         // /v/<id>
       ];
 
       // If any pattern matches, return the ID
       for (i = 0; i < patterns.length; ++i) {
         if (patterns[i].test(url)) {
-          return patterns[i].exec(url)[1];
+          result = patterns[i].exec(url)[1];
         }
       }
 
@@ -38,14 +38,17 @@
         // for the 11 character key
         var tokens = url.split(/[\/\&\?=#\.\s]/g);
         for (i = 0; i < tokens.length; ++i) {
-          if (/^[^#\&\?]{11}$/.test(tokens[i])) {
-            return tokens[i];
+          if (/^[^#\&\?]{11,}$/.test(tokens[i])) {
+            result = tokens[i];
           }
         }
       }
     }
 
-    return null;
+    if (result && result.length > 11) {
+      return false;
+    }
+    return result;
   };
 
 }));
