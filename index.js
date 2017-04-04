@@ -8,8 +8,8 @@
     root.getYouTubeID = factory();
   }
 }(this, function (exports) {
-  var result = false;
   return function (url, opts) {
+    var result = false;
     if (opts == undefined) {
       opts = {fuzzy: true};
     }
